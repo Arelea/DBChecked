@@ -1,14 +1,11 @@
 ﻿using DBChecked.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
-using System.Threading.Tasks;
 using DBChecked.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Npgsql;
@@ -103,77 +100,63 @@ namespace DBChecked.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult SetSqlQuery(string connections)
+        public IActionResult SetSqlQuery(SetSqlQueryForm form, string connectionString)
         {
             var viewModel = this.GetViewModel<SetSqlQueryViewModel>();
-            var parsedConnections = connections.Split(":").ToList();
+            if (form?.ConnectionsString == null)
+            {
+                viewModel.Form = this.CreateForm<SetSqlQueryForm>();
+                viewModel.Form.ConnectionsString = connectionString;
+            }
+            var parsedConnections = form.ConnectionsString.Split(":").ToList();
             var list = new List<SelectListItem>();
             foreach (var parsedConnection in parsedConnections)
             {
                 list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").First(m => m.Contains("Database")).Remove(0, 9) });
             }
 
-            viewModel.Form = this.CreateForm<SetSqlQueryForm>();
-            viewModel.Form.ConnectionsString = connections == null || connections == "" ? TempData["connectionString"].ToString() : connections;
+            viewModel.Form.ConnectionsString = form.ConnectionsString;
             viewModel.ConnectionList =  list;
 
-            if (TempData["Result"] != null)
+            if (!string.IsNullOrEmpty(form.Connection) && !string.IsNullOrEmpty(form.Query))
             {
-                viewModel.Result = TempData["Result"] as List<dynamic>;
-            }
-            else if (TempData["errorMessage"] != null)
-            {
-                viewModel.ErrorMessage = TempData["errorMessage"].ToString();
+                var dns = new List<dynamic>();
+                try
+                {
+                    using (NpgsqlConnection conn = new NpgsqlConnection(form.Connection))
+                    {
+                        conn.Open();
+                        NpgsqlCommand command = new NpgsqlCommand(form.Query, conn);
+                        NpgsqlDataReader reader = command.ExecuteReader();
+
+                        var dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        foreach (var item in dataTable.AsEnumerable())
+                        {
+                            IDictionary<string, object> dn = new ExpandoObject();
+
+                            foreach (var column in dataTable.Columns.Cast<DataColumn>())
+                            {
+                                dn[column.ColumnName] = item[column];
+                            }
+
+                            dns.Add(dn);
+                        }
+
+                        viewModel.Result = dns;
+                        reader.Close();
+
+                        command.Dispose();
+                        conn.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    viewModel.ErrorMessage = e.Message;
+                }
             }
 
             return View(viewModel);
-        }
-
-        [HttpPost]
-        public IActionResult SetSqlQuery(SetSqlQueryForm form)
-        {
-            var dns = new List<dynamic>();
-            try
-            {
-                using (NpgsqlConnection conn = new NpgsqlConnection(form.Connection))
-                {
-                    conn.Open();
-                    NpgsqlCommand command = new NpgsqlCommand(form.Query, conn);
-                    NpgsqlDataReader reader = command.ExecuteReader();
-
-                    var dataTable = new DataTable();
-                    dataTable.Load(reader);
-                    foreach (var item in dataTable.AsEnumerable())
-                    {
-                        IDictionary<string, object> dn = new ExpandoObject();
-
-                        foreach (var column in dataTable.Columns.Cast<DataColumn>())
-                        {
-                            dn[column.ColumnName] = item[column];
-                        }
-
-                        dns.Add(dn);
-                    }
-
-                    reader.Close();
-
-                    command.Dispose();
-                    conn.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                TempData["errorMessage"] = e.Message;
-                TempData["connectionString"] = form.ConnectionsString;
-
-                return RedirectToAction("SetSqlQuery", "Home");
-            }
-
-            TempData["connectionString"] = form.ConnectionsString;
-            TempData["Result"] = dns;
-
-            return RedirectToAction("SetSqlQuery", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
