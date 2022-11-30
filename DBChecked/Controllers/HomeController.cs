@@ -54,7 +54,7 @@ namespace DBChecked.Controllers
                     {
                         try
                         {
-                            using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};"))
+                            using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};Timeout=3;"))
                             {
                                 conn.Open();
                                 NpgsqlCommand command = new NpgsqlCommand("SELECT 12;", conn);
