@@ -49,27 +49,33 @@ namespace DBChecked.Controllers
 
                 if (listOfConnections.Any())
                 {
-                    foreach (var connection in listOfConnections)
+                    try
                     {
-                        using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};"))
+                        foreach (var connection in listOfConnections)
                         {
-                            conn.Open();
-                            NpgsqlCommand command = new NpgsqlCommand("SELECT 12;", conn);
-                            NpgsqlDataReader reader = command.ExecuteReader();
-
-                            while (reader.Read())
+                            using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};"))
                             {
-                                var val = (int)reader[0];
-                                if (val == 12)
-                                {
-                                    connection.Status = "Работает";
-                                }
-                            }
-                            reader.Close();
+                                conn.Open();
+                                NpgsqlCommand command = new NpgsqlCommand("SELECT 12;", conn);
+                                NpgsqlDataReader reader = command.ExecuteReader();
 
-                            command.Dispose();
-                            conn.Close();
+                                while (reader.Read())
+                                {
+                                    var val = (int)reader[0];
+                                    if (val == 12)
+                                    {
+                                        connection.Status = "Работает";
+                                    }
+                                }
+                                reader.Close();
+
+                                command.Dispose();
+                                conn.Close();
+                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
                     }
                 }
             }
