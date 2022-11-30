@@ -8,6 +8,8 @@
             <select asp-for="@this.Model.Form.Connection" class="form-control" asp-items="@(new SelectList(this.Model.ConnectionList, "Value", "Text"))"></select>
             <span asp-validation-for="@this.Model.Form.Connection" class="text-danger"></span>
         </div>
+    </div>
+    <div class="form-row">
         <div class="form-group col-md-6">
             <label asp-for="@this.Model.Form.Query" class="control-label">Запрос</label>
             <textarea asp-for="@this.Model.Form.Query" class="form-control" rows="3"></textarea>
@@ -16,7 +18,7 @@
     </div>
     <div class="form-row input-btn-group">
         <div class="form-group submit-btn">
-            <input type="submit" value="Сохранить" class="btn btn-primary-submit">
+            <input type="submit" value="Исполнить" class="btn btn-primary-submit">
         </div>
     </div>
 </form>

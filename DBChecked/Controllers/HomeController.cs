@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -108,7 +110,7 @@ namespace DBChecked.Controllers
             var list = new List<SelectListItem>();
             foreach (var parsedConnection in parsedConnections)
             {
-                list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").First(m => m.Contains("Database")) });
+                list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").First(m => m.Contains("Database")).Remove(0, 9) });
             }
 
             viewModel.ConnectionList =  list;
@@ -127,9 +129,11 @@ namespace DBChecked.Controllers
                     NpgsqlCommand command = new NpgsqlCommand(form.Query, conn);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
-                    while (reader.Read())
-                    {
-                    }
+                    var dataTable = new DataTable();
+                    dataTable.Load(reader);
+
+                    var x = dataTable.AsEnumerable().Select(row => new DynamicRow(row));
+
                     reader.Close();
 
                     command.Dispose();
