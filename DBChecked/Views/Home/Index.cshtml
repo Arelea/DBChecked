@@ -29,46 +29,48 @@
     {
         <table align="center" class="table table-standart">
             <thead>
-                <tr>
-                    <th>
-                        Имя
-                    </th>
-                    <th>
-                        Описание
-                    </th>
-                    <th>
-                        Хост
-                    </th>
-                    <th>
-                        Порт
-                    </th>
-                    <th>
-                        Статус
-                    </th>
-                </tr>
+            <tr>
+                <th>
+                    Имя
+                </th>
+                <th>
+                    Описание
+                </th>
+                <th>
+                    Хост
+                </th>
+                <th>
+                    Порт
+                </th>
+                <th>
+                    Статус
+                </th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var item in this.Model.List)
-                {
-                    <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            @item.Descr
-                        </td>
-                        <td>
-                            @item.Host
-                        </td>
-                        <td>
-                            @item.Port
-                        </td>
-                        <td>
-                            @item.Status
-                        </td>
-                    </tr>
-                }
+            @foreach (var item in this.Model.List)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Descr
+                    </td>
+                    <td>
+                        @item.Host
+                    </td>
+                    <td>
+                        @item.Port
+                    </td>
+                    <td>
+                        @item.Status
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     }
 </div>
+<a class="btn btn-secondary-child" href="@Html.ActionLink("Написать запрос", "SetSqlQuery", "Home", new { connections = this.Model.List })">
+</a>

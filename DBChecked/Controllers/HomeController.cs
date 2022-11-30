@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using DBChecked.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Npgsql;
 
 namespace DBChecked.Controllers
@@ -54,7 +55,7 @@ namespace DBChecked.Controllers
                     {
                         try
                         {
-                            using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};Timeout=3;"))
+                            using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};Timeout=1;"))
                             {
                                 conn.Open();
                                 NpgsqlCommand command = new NpgsqlCommand("SELECT 12;", conn);
@@ -93,6 +94,50 @@ namespace DBChecked.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult SetSqlQuery(List<DBConnectionData> connections)
+        {
+            var viewModel = this.GetViewModel<SetSqlQueryViewModel>();
+
+            var list = new List<SelectListItem>();
+            foreach (var item in connections)
+            {
+                list.Add(new SelectListItem { Value = $"Server={item.Host};Port={item.Port};User Id=laura;Password=2JlyKXxT7P;Database={item.Name};Timeout=30;", Text = item.Name });
+            }
+
+            viewModel.ConnectionList =  list;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SetSqlQuery(SetSqlQueryForm form)
+        {
+            try
+            {
+                using (NpgsqlConnection conn = new NpgsqlConnection(form.Connection))
+                {
+                    conn.Open();
+                    NpgsqlCommand command = new NpgsqlCommand(form.Query, conn);
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                    }
+                    reader.Close();
+
+                    command.Dispose();
+                    conn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("SetSqlQuery", "Home");
+            }
+
+            return RedirectToAction("SetSqlQuery", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
