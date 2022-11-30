@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using DBChecked.ViewModels;
@@ -131,8 +132,20 @@ namespace DBChecked.Controllers
 
                     var dataTable = new DataTable();
                     dataTable.Load(reader);
+                    var dns = new List<dynamic>();
 
-                    var x = dataTable.AsEnumerable().Select(row => new DynamicRow(row));
+                    foreach (var item in dataTable.AsEnumerable())
+                    {
+                        // Expando objects are IDictionary<string, object>
+                        IDictionary<string, object> dn = new ExpandoObject();
+
+                        foreach (var column in dataTable.Columns.Cast<DataColumn>())
+                        {
+                            dn[column.ColumnName] = item[column];
+                        }
+
+                        dns.Add(dn);
+                    }
 
                     reader.Close();
 
