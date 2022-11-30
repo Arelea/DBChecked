@@ -13,5 +13,13 @@ namespace DBChecked.Controllers
 
             return result;
         }
+
+        protected T1 CreateForm<T1>()
+            where T1 : BaseForm, new()
+        {
+            var result = new T1();
+
+            return result;
+        }
     }
 }

@@ -22,3 +22,41 @@
         </div>
     </div>
 </form>
+
+@if (this.Model.ErrorMessage != null)
+{
+    <div class="text-center alert-danger">
+        <h2 class="display-4">Ошибка</h2>
+        <p>@this.Model.ErrorMessage</p>
+    </div>
+}
+@if (this.Model.Result != null && this.Model.Result.Any())
+{
+    <div class="table-wrapper">
+        <table align="center" class="table table-standart">
+            <thead>
+                <tr>
+                    @foreach (var item in this.Model.Result)
+                    {
+                        <th>
+                            @item.Key
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in this.Model.Result)
+                {
+                    <tr>
+                        @foreach (var elem in item.Value)
+                        {
+                            <td>
+                                @elem
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

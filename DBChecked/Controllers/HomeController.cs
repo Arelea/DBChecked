@@ -104,7 +104,7 @@ namespace DBChecked.Controllers
         }
 
         [HttpGet]
-        public IActionResult SetSqlQuery(string connections)
+        public IActionResult SetSqlQuery(string connections, List<dynamic> result = null, string errorMessage = null)
         {
             var viewModel = this.GetViewModel<SetSqlQueryViewModel>();
             var parsedConnections = connections.Split(":").ToList();
@@ -114,7 +114,18 @@ namespace DBChecked.Controllers
                 list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").First(m => m.Contains("Database")).Remove(0, 9) });
             }
 
+            viewModel.Form = this.CreateForm<SetSqlQueryForm>();
+            viewModel.Form.ConnectionsString = connections;
             viewModel.ConnectionList =  list;
+
+            if (result != null && result.Any())
+            {
+                viewModel.Result = result;
+            }
+            else if (errorMessage != null)
+            {
+                viewModel.ErrorMessage = errorMessage;
+            }
 
             return View(viewModel);
         }
@@ -122,6 +133,7 @@ namespace DBChecked.Controllers
         [HttpPost]
         public IActionResult SetSqlQuery(SetSqlQueryForm form)
         {
+            var dns = new List<dynamic>();
             try
             {
                 using (NpgsqlConnection conn = new NpgsqlConnection(form.Connection))
@@ -132,11 +144,8 @@ namespace DBChecked.Controllers
 
                     var dataTable = new DataTable();
                     dataTable.Load(reader);
-                    var dns = new List<dynamic>();
-
                     foreach (var item in dataTable.AsEnumerable())
                     {
-                        // Expando objects are IDictionary<string, object>
                         IDictionary<string, object> dn = new ExpandoObject();
 
                         foreach (var column in dataTable.Columns.Cast<DataColumn>())
@@ -155,10 +164,10 @@ namespace DBChecked.Controllers
             }
             catch (Exception e)
             {
-                return RedirectToAction("SetSqlQuery", "Home");
+                return RedirectToAction("SetSqlQuery", "Home", new { connections = form.ConnectionsString, errorMessage = e.Message });
             }
 
-            return RedirectToAction("SetSqlQuery", "Home");
+            return RedirectToAction("SetSqlQuery", "Home", new { connections = form.ConnectionsString, result = dns });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
