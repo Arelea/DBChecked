@@ -102,13 +102,15 @@ namespace DBChecked.Controllers
 
         public IActionResult SetSqlQuery(SetSqlQueryForm form, string connectionString)
         {
+            
             var viewModel = this.GetViewModel<SetSqlQueryViewModel>();
-            if (form?.ConnectionsString == null)
+            var isCsNull = form?.ConnectionsString == null;
+            if (isCsNull)
             {
                 viewModel.Form = this.CreateForm<SetSqlQueryForm>();
                 viewModel.Form.ConnectionsString = connectionString;
             }
-            var parsedConnections = form.ConnectionsString.Split(":").ToList();
+            var parsedConnections = isCsNull ? connectionString.Split(":").ToList() : form.ConnectionsString.Split(":").ToList();
             var list = new List<SelectListItem>();
             foreach (var parsedConnection in parsedConnections)
             {
