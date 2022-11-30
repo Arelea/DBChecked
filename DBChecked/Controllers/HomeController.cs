@@ -108,12 +108,12 @@ namespace DBChecked.Controllers
             var list = new List<SelectListItem>();
             foreach (var parsedConnection in parsedConnections)
             {
-                list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").Last() });
+                list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").First(m => m.Contains("Database")) });
             }
 
             viewModel.ConnectionList =  list;
 
-            return View();
+            return View(viewModel);
         }
 
         [HttpPost]
