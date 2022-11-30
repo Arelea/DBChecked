@@ -72,6 +72,6 @@
         </table>
     }
 </div>
-<a class="btn btn-secondary-child" href="@this.Url.Action("SetSqlQuery", "Home", new { connections = this.Model.List })">
-    <span class="btn-link-text">Перейти</span>
+<a class="btn btn-secondary-child" asp-action="SetSqlQuery" asp-controller="Home" asp-route-connections="@string.Join(":", this.Model.CompletedConnections)" target="_blank">
+    <span class="btn-link-text">Написать запрос</span>
 </a>

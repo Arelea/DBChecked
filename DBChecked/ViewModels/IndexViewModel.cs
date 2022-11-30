@@ -8,6 +8,8 @@ namespace DBChecked.ViewModels
     {
         public List<DBConnectionData> List { get; set; }
 
+        public List<string> CompletedConnections { get; set; }
+
         public string Error { get; set; }
     }
 }

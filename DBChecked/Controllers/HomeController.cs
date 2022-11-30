@@ -18,6 +18,7 @@ namespace DBChecked.Controllers
         {
             var viewModel = this.GetViewModel<IndexViewModel>();
             var listOfConnections = new List<DBConnectionData>();
+            var completedConnections = new List<string>();
 
             try
             {
@@ -41,6 +42,8 @@ namespace DBChecked.Controllers
                             Port = port,
                             Descr = descr,
                         });
+
+                        completedConnections.Add($"Server={host};Port={port};User Id=laura;Password=2JlyKXxT7P;Database={name};Timeout=30;");
                     }
                     reader.Close();
 
@@ -86,6 +89,7 @@ namespace DBChecked.Controllers
                 viewModel.Error = e.Message;
             }
 
+            viewModel.CompletedConnections = completedConnections;
             viewModel.List = listOfConnections;
 
             return View(viewModel);
@@ -97,14 +101,14 @@ namespace DBChecked.Controllers
         }
 
         [HttpGet]
-        public IActionResult SetSqlQuery(List<DBConnectionData> connections)
+        public IActionResult SetSqlQuery(string connections)
         {
             var viewModel = this.GetViewModel<SetSqlQueryViewModel>();
-
+            var parsedConnections = connections.Split(":").ToList();
             var list = new List<SelectListItem>();
-            foreach (var item in connections)
+            foreach (var parsedConnection in parsedConnections)
             {
-                list.Add(new SelectListItem { Value = $"Server={item.Host};Port={item.Port};User Id=laura;Password=2JlyKXxT7P;Database={item.Name};Timeout=30;", Text = item.Name });
+                list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").Last() });
             }
 
             viewModel.ConnectionList =  list;
