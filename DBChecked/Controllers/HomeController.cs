@@ -110,6 +110,7 @@ namespace DBChecked.Controllers
                 viewModel.Form = this.CreateForm<SetSqlQueryForm>();
                 viewModel.Form.ConnectionsString = connectionString;
             }
+
             var parsedConnections = isCsNull ? connectionString.Split(":").ToList() : form.ConnectionsString.Split(":").ToList();
             var list = new List<SelectListItem>();
             foreach (var parsedConnection in parsedConnections)
@@ -117,7 +118,6 @@ namespace DBChecked.Controllers
                 list.Add(new SelectListItem { Value = parsedConnection, Text = parsedConnection.Split(";").First(m => m.Contains("Database")).Remove(0, 9) });
             }
 
-            viewModel.Form.ConnectionsString = form.ConnectionsString;
             viewModel.ConnectionList =  list;
 
             if (!string.IsNullOrEmpty(form.Connection) && !string.IsNullOrEmpty(form.Query))
