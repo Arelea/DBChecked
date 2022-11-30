@@ -104,7 +104,7 @@ namespace DBChecked.Controllers
         }
 
         [HttpGet]
-        public IActionResult SetSqlQuery(string connections, List<dynamic> result = null, string errorMessage = null)
+        public IActionResult SetSqlQuery(string connections)
         {
             var viewModel = this.GetViewModel<SetSqlQueryViewModel>();
             var parsedConnections = connections.Split(":").ToList();
@@ -115,16 +115,16 @@ namespace DBChecked.Controllers
             }
 
             viewModel.Form = this.CreateForm<SetSqlQueryForm>();
-            viewModel.Form.ConnectionsString = connections;
+            viewModel.Form.ConnectionsString = connections == null || connections == "" ? TempData["connectionString"].ToString() : connections;
             viewModel.ConnectionList =  list;
 
-            if (result != null && result.Any())
+            if (TempData["Result"] != null)
             {
-                viewModel.Result = result;
+                viewModel.Result = TempData["Result"] as List<dynamic>;
             }
-            else if (errorMessage != null)
+            else if (TempData["errorMessage"] != null)
             {
-                viewModel.ErrorMessage = errorMessage;
+                viewModel.ErrorMessage = TempData["errorMessage"].ToString();
             }
 
             return View(viewModel);
@@ -164,10 +164,16 @@ namespace DBChecked.Controllers
             }
             catch (Exception e)
             {
-                return RedirectToAction("SetSqlQuery", "Home", new { connections = form.ConnectionsString, errorMessage = e.Message });
+                TempData["errorMessage"] = e.Message;
+                TempData["connectionString"] = form.ConnectionsString;
+
+                return RedirectToAction("SetSqlQuery", "Home");
             }
 
-            return RedirectToAction("SetSqlQuery", "Home", new { connections = form.ConnectionsString, result = dns });
+            TempData["connectionString"] = form.ConnectionsString;
+            TempData["Result"] = dns;
+
+            return RedirectToAction("SetSqlQuery", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
