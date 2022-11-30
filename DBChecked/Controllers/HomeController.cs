@@ -20,7 +20,7 @@ namespace DBChecked.Controllers
 
             try
             {
-                using(NpgsqlConnection conn = new NpgsqlConnection("Server=10.200.0.17;Port=5433;User Id=laura;Password=2JlyKXxT7P;Database=service;"))
+                using (NpgsqlConnection conn = new NpgsqlConnection("Server=10.200.0.17;Port=5433;User Id=laura;Password=2JlyKXxT7P;Database=service;"))
                 {
                     conn.Open();
                     NpgsqlCommand command = new NpgsqlCommand("SELECT name, descr, host, port FROM dbases;", conn);
@@ -49,9 +49,10 @@ namespace DBChecked.Controllers
 
                 if (listOfConnections.Any())
                 {
-                    try
+
+                    foreach (var connection in listOfConnections)
                     {
-                        foreach (var connection in listOfConnections)
+                        try
                         {
                             using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};"))
                             {
@@ -73,9 +74,9 @@ namespace DBChecked.Controllers
                                 conn.Close();
                             }
                         }
-                    }
-                    catch (Exception e)
-                    {
+                        catch (Exception e)
+                        {
+                        }
                     }
                 }
             }
