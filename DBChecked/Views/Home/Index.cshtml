@@ -72,5 +72,6 @@
         </table>
     }
 </div>
-<a class="btn btn-secondary-child" href="@Html.ActionLink("Написать запрос", "SetSqlQuery", "Home", new { connections = this.Model.List })">
+<a class="btn btn-secondary-child" href="@this.Url.Action("SetSqlQuery", "Home", new { connections = this.Model.List })">
+    <span class="btn-link-text">Перейти</span>
 </a>
