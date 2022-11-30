@@ -1,0 +1,40 @@
+﻿.table-standart {
+    margin-top: 5px;
+
+    thead {
+        background-color: #FCFCFC;
+
+        th {
+            font-size: 17px;
+            font-weight: 500;
+            color: #4C4C4C;
+        }
+    }
+
+    tbody {
+
+        tr {
+            border-bottom: 1px solid #dee2e6;
+
+            td {
+                border-top: unset !important;
+                font-size: 16px;
+                font-weight: 400;
+                color: #4C4C4C;
+            }
+
+            td:not(:last-child) {
+                border-right: 1px solid #dee2e6;
+            }
+        }
+    }
+}
+
+.table-wrapper {
+    background-color: #ffffff;
+    overflow-x: auto;
+
+    .table {
+        margin-bottom: 0;
+    }
+}

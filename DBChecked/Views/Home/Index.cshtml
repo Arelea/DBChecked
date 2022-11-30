@@ -1,0 +1,76 @@
+﻿@model DBChecked.ViewModels.IndexViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="table-wrapper">
+    @if (this.Model.List == null || !this.Model.List.Any())
+    {
+        <div class="empty-result">
+            <span>Записи не найдены</span>
+            @if (this.Model.Error != null)
+            {
+                <div>
+                    <span>Что то не так с сервисной БД :(</span>
+                </div>
+                <div>
+                    <span>@this.Model.Error</span>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <table align="center" class="table table-standart">
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        Имя
+                    </th>
+                    <th>
+                        Описание
+                    </th>
+                    <th>
+                        Хост
+                    </th>
+                    <th>
+                        Порт
+                    </th>
+                    <th>
+                        Статус
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in this.Model.List)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Descr
+                        </td>
+                        <td>
+                            @item.Host
+                        </td>
+                        <td>
+                            @item.Port
+                        </td>
+                        <td>
+                            @item.Status
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
