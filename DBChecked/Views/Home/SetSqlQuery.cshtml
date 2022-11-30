@@ -2,6 +2,7 @@
 
 <form asp-action="SetSqlQuery" autocomplete="on">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="@this.Model.Form.ConnectionsString" />
     <div class="form-row">
         <div class="form-group col-md-6">
             <label asp-for="@this.Model.Form.Connection" class="control-label">База данных</label>
