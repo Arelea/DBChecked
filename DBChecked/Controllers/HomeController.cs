@@ -20,7 +20,7 @@ namespace DBChecked.Controllers
 
             try
             {
-                using (NpgsqlConnection conn = new NpgsqlConnection("Server=10.200.0.17;Port=5433;User Id=laura;Password=2JlyKXxT7P;Database=service;"))
+                using(NpgsqlConnection conn = new NpgsqlConnection("Server=10.200.0.17;Port=5433;User Id=laura;Password=2JlyKXxT7P;Database=service;"))
                 {
                     conn.Open();
                     NpgsqlCommand command = new NpgsqlCommand("SELECT name, descr, host, port FROM dbases;", conn);
@@ -45,6 +45,32 @@ namespace DBChecked.Controllers
 
                     command.Dispose();
                     conn.Close();
+                }
+
+                if (listOfConnections.Any())
+                {
+                    foreach (var connection in listOfConnections)
+                    {
+                        using (NpgsqlConnection conn = new NpgsqlConnection($"Server={connection.Host};Port={connection.Port};User Id=laura;Password=2JlyKXxT7P;Database={connection.Name};"))
+                        {
+                            conn.Open();
+                            NpgsqlCommand command = new NpgsqlCommand("SELECT 12;", conn);
+                            NpgsqlDataReader reader = command.ExecuteReader();
+
+                            while (reader.Read())
+                            {
+                                var val = (int)reader[0];
+                                if (val == 12)
+                                {
+                                    connection.Status = "Работает";
+                                }
+                            }
+                            reader.Close();
+
+                            command.Dispose();
+                            conn.Close();
+                        }
+                    }
                 }
             }
             catch (Exception e)

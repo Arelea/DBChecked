@@ -15,6 +15,6 @@ namespace DBChecked.Models
 
         public string Port { get; set; }
 
-        public string Status { get; set; }
+        public string Status { get; set; } = "Недоступен";
     }
 }
