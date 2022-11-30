@@ -20,10 +20,10 @@ namespace DBChecked.Controllers
 
             try
             {
-                using (NpgsqlConnection conn = new NpgsqlConnection("connection string"))
+                using (NpgsqlConnection conn = new NpgsqlConnection("Server=10.200.0.17;Port=5433;User Id=laura;Password=2JlyKXxT7P;Database=service;"))
                 {
                     conn.Open();
-                    NpgsqlCommand command = new NpgsqlCommand("Select * From Table", conn);
+                    NpgsqlCommand command = new NpgsqlCommand("SELECT name, descr, host, port FROM dbases;", conn);
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
