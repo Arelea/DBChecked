@@ -33,8 +33,10 @@
 }
 @if (this.Model.Result != null && this.Model.Result.Any())
 {
+    var dynamics = this.Model.Result;
+
     <div class="table-wrapper">
-        <table align="center" class="table table-standart">
+        <table class="table table-standart">
             <thead>
                 <tr>
                     @foreach (var item in this.Model.Result)
