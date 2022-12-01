@@ -39,22 +39,22 @@
         <table class="table table-standart">
             <thead>
                 <tr>
-                    @foreach (var item in this.Model.Result)
+                    @for (int i = 0; i < dynamics.Count; i++)
                     {
                         <th>
-                            @item.Key
+                            @dynamics[i][0]
                         </th>
                     }
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in this.Model.Result)
+                @for (int i = 0; i < dynamics.Count; i++)
                 {
                     <tr>
-                        @foreach (var elem in item.Value)
+                        @for (int j = 0; j < dynamics[1][i].Count; j++)
                         {
                             <td>
-                                @elem
+                                @dynamics[i][1][j]
                             </td>
                         }
                     </tr>
