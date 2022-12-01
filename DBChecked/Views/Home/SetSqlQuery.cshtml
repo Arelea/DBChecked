@@ -33,28 +33,30 @@
 }
 @if (this.Model.Result != null && this.Model.Result.Any())
 {
-    var dynamics = this.Model.Result;
+    var dynamic = this.Model.Result.FirstOrDefault();
+    var parsedDynamic = dynamic as IDictionary<string, object>;
 
     <div class="table-wrapper">
         <table class="table table-standart">
             <thead>
                 <tr>
-                    @for (int i = 0; i < dynamics.Count; i++)
+                    @foreach (var columnName in parsedDynamic.Keys)
                     {
                         <th>
-                            @dynamics[i][0]
+                            @columnName
                         </th>
                     }
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < dynamics.Count; i++)
+                @foreach (var valueRow in this.Model.Result)
                 {
+                    var parsedValueRow = valueRow as IDictionary<string, object>;
                     <tr>
-                        @for (int j = 0; j < dynamics[1][i].Count; j++)
+                        @foreach (var columnValue in parsedValueRow.Values)
                         {
                             <td>
-                                @dynamics[i][1][j]
+                                @columnValue
                             </td>
                         }
                     </tr>
