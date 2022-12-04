@@ -1,4 +1,40 @@
-﻿.table-standart {
+﻿.content-table {
+    margin-top: 0;
+
+    .table-wrapper {
+        background-color: #ffffff;
+        overflow-x: auto;
+
+        .table {
+            margin-bottom: 0;
+        }
+    }
+
+    .table-inputs {
+        background-color: #ffffff;
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-top: 10px;
+        margin-bottom: 15px;
+
+        .form-row {
+            margin-right: 0;
+            margin-left: 0;
+        }
+    }
+}
+
+.table-container {
+    padding: 15px 15px 15px 15px;
+}
+
+.header-container {
+    height: 64px;
+    margin-left: 1px;
+    background-color: #ffffff;
+}
+
+.table-standart {
     margin-top: 5px;
 
     thead {
@@ -28,6 +64,10 @@
             }
         }
     }
+}
+
+.table-item-link {
+    width: 15%;
 }
 
 .table-wrapper {
@@ -97,4 +137,90 @@
     font-weight: 500;
     font-size: 16px;
     color: #575757;
+}
+
+.header {
+    background-color: #83DAFF;
+    height: 60px;
+    border-bottom: #dbd5d5 2px solid;
+
+    .container {
+        max-width: 1240px;
+    }
+}
+
+.header-item {
+    color: #575757;
+    font-weight: 500;
+    margin-left: 1rem;
+    font-size: 18px;
+    padding-top: 10px;
+}
+
+.page-wrapper {
+    flex: 1 0 auto;
+
+    .container {
+        background-color: #fff;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        max-width: 1240px;
+        padding: 15px 15px 15px 15px;
+    }
+}
+
+.header-text {
+
+    span {
+        color: #575757;
+        font-weight: 500;
+        font-size: 26px;
+    }
+}
+
+.header-text-child {
+    text-align: center;
+    color: black;
+    font-weight: 500;
+    font-size: 20px;
+    margin: 6px 0 6px 0;
+    border-bottom: #dbd5d5 1px solid;
+    padding: 0 15px 5px 15px;
+}
+
+.child-content {
+    padding: 0 15px 0 15px;
+}
+
+.content {
+    margin-top: 1rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: #dbd5d5 2px solid;
+}
+
+.menu-item {
+    padding: 10px 0 10px 0;
+
+    a {
+        position: relative;
+        display: block;
+        padding: 8px 0 8px 15px;
+        background-color: #fff;
+        border: 1px solid #e0d3e5;
+        color: #495057;
+        text-align: inherit;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 16px;
+
+        &:hover {
+            text-decoration: none;
+            background-color: #f2f2f2;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem #e0d3e5;
+        }
+    }
 }
